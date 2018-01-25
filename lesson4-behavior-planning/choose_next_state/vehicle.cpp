@@ -47,10 +47,10 @@ Vehicle::~Vehicle() {}
 
 vector<Vehicle> Vehicle::choose_next_state(map<int, vector<Vehicle>> predictions) {
     /*
-    
+
     ***Here you can implement the transition_function code from the Behavior Planning Pseudocode
     classroom concept.***
-    
+
     INPUT: A predictions map. This is a map using vehicle id as keys with predicted
         vehicle trajectories as values. A trajectory is a vector of Vehicle objects. The first
         item in the trajectory represents the vehicle at the current timestep. The second item in
@@ -58,15 +58,15 @@ vector<Vehicle> Vehicle::choose_next_state(map<int, vector<Vehicle>> predictions
     OUTPUT: The the best (lowest cost) trajectory for the ego vehicle corresponding to the next ego vehicle state.
 
     Functions that will be useful:
-    1. successor_states() - Uses the current state to return a vector of possible successor states for the finite 
+    1. successor_states() - Uses the current state to return a vector of possible successor states for the finite
        state machine.
-    2. generate_trajectory(string state, map<int, vector<Vehicle>> predictions) - Returns a vector of Vehicle objects 
-       representing a vehicle trajectory, given a state and predictions. Note that trajectory vectors 
-       might have size 0 if no possible trajectory exists for the state. 
-    3. calculate_cost(Vehicle vehicle, map<int, vector<Vehicle>> predictions, vector<Vehicle> trajectory) - Included from 
+    2. generate_trajectory(string state, map<int, vector<Vehicle>> predictions) - Returns a vector of Vehicle objects
+       representing a vehicle trajectory, given a state and predictions. Note that trajectory vectors
+       might have size 0 if no possible trajectory exists for the state.
+    3. calculate_cost(Vehicle vehicle, map<int, vector<Vehicle>> predictions, vector<Vehicle> trajectory) - Included from
        cost.cpp, computes the cost for a trajectory.
     */
-    
+
     //TODO: Your solution here.
     vector <string> states = successor_states();
     float cost;
@@ -85,7 +85,7 @@ vector<Vehicle> Vehicle::choose_next_state(map<int, vector<Vehicle>> predictions
 
     vector<float>::iterator best_cost = min_element(begin(costs), end(costs));
     int best_idx = distance(begin(costs), best_cost);
-    
+
     //TODO: Change return value here:
     //return generate_trajectory("KL", predictions);
     return final_trajectories[best_idx];
@@ -93,8 +93,8 @@ vector<Vehicle> Vehicle::choose_next_state(map<int, vector<Vehicle>> predictions
 
 vector<string> Vehicle::successor_states() {
     /*
-    Provides the possible next states given the current state for the FSM 
-    discussed in the course, with the exception that lane changes happen 
+    Provides the possible next states given the current state for the FSM
+    discussed in the course, with the exception that lane changes happen
     instantaneously, so LCL and LCR can only transition back to KL.
     */
     vector<string> states;
@@ -136,9 +136,9 @@ vector<Vehicle> Vehicle::generate_trajectory(string state, map<int, vector<Vehic
 }
 
 vector<float> Vehicle::get_kinematics(map<int, vector<Vehicle>> predictions, int lane) {
-    /* 
-    Gets next timestep kinematics (position, velocity, acceleration) 
-    for a given lane. Tries to choose the maximum velocity and acceleration, 
+    /*
+    Gets next timestep kinematics (position, velocity, acceleration)
+    for a given lane. Tries to choose the maximum velocity and acceleration,
     given other vehicle positions and accel/velocity constraints.
     */
     float max_velocity_accel_limit = this->max_acceleration + this->v;
@@ -159,11 +159,11 @@ vector<float> Vehicle::get_kinematics(map<int, vector<Vehicle>> predictions, int
     } else {
         new_velocity = min(max_velocity_accel_limit, this->target_speed);
     }
-    
+
     new_accel = new_velocity - this->v; //Equation: (v_1 - v_0)/t = acceleration
     new_position = this->s + new_velocity + new_accel / 2.0;
     return{new_position, new_velocity, new_accel};
-    
+
 }
 
 vector<Vehicle> Vehicle::constant_speed_trajectory() {
@@ -171,7 +171,7 @@ vector<Vehicle> Vehicle::constant_speed_trajectory() {
     Generate a constant speed trajectory.
     */
     float next_pos = position_at(1);
-    vector<Vehicle> trajectory = {Vehicle(this->lane, this->s, this->v, this->a, this->state), 
+    vector<Vehicle> trajectory = {Vehicle(this->lane, this->s, this->v, this->a, this->state),
                                   Vehicle(this->lane, next_pos, this->v, 0, this->state)};
     return trajectory;
 }
@@ -206,7 +206,7 @@ vector<Vehicle> Vehicle::prep_lane_change_trajectory(string state, map<int, vect
         new_s = curr_lane_new_kinematics[0];
         new_v = curr_lane_new_kinematics[1];
         new_a = curr_lane_new_kinematics[2];
-        
+
     } else {
         vector<float> best_kinematics;
         vector<float> next_lane_new_kinematics = get_kinematics(predictions, new_lane);
@@ -325,7 +325,7 @@ void Vehicle::realize_next_state(vector<Vehicle> trajectory) {
 void Vehicle::configure(vector<int> road_data) {
     /*
     Called by simulator before simulation begins. Sets various
-    parameters which will impact the ego vehicle. 
+    parameters which will impact the ego vehicle.
     */
     target_speed = road_data[0];
     lanes_available = road_data[1];
