@@ -3,3 +3,7 @@
 Eigen/
 Eigen-3.3/
 json.hpp
+term3_sim_mac.zip
+term3_sim_mac/
+cmake-build-debug/
+
