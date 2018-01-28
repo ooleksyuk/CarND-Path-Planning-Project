@@ -1,0 +1,5 @@
+.idea/
+.DS_Store
+Eigen/
+Eigen-3.3/
+json.hpp
