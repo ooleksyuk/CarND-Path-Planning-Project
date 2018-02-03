@@ -16,7 +16,7 @@ public:
   double car_d;
   double car_yaw;
   double car_speed;
-  bool car_ahead;
+  bool in_lane;
   bool car_left;
   bool car_right;
 

@@ -31,9 +31,8 @@ void calculate_trajectory(Vehicle my_car, int prev_size,
   // Car yaw comes in deg, convert it to rads.
   double ref_yaw = deg2rad(my_car.car_yaw);
 
-  // Do I have have previous points
+  // If there are at least two points
   if ( prev_size < 2 ) {
-    // There are not too many...
     double prev_car_x = my_car.car_x - cos(my_car.car_yaw);
     double prev_car_y = my_car.car_y - sin(my_car.car_yaw);
 
@@ -43,7 +42,7 @@ void calculate_trajectory(Vehicle my_car, int prev_size,
     ptsy.push_back(prev_car_y);
     ptsy.push_back(my_car.car_y);
   } else {
-    // Use the last two points.
+    // Else use the last two points
     ref_x = previous_path_x[prev_size - 1];
     ref_y = previous_path_y[prev_size - 1];
 
@@ -150,7 +149,7 @@ void calculate_prediction(vector<vector<double>> &sensor_fusion, Vehicle &my_car
 
     if ( car_lane == lane ) {
       // Car in our lane.
-      my_car.car_ahead |= (check_car_s > my_car.car_s) && ((check_car_s - my_car.car_s) < 30);
+      my_car.in_lane |= (check_car_s > my_car.car_s) && ((check_car_s - my_car.car_s) < 30);
     } else if ( (car_lane - lane) == -1 ) {
       // Car left
       my_car.car_left |= (my_car.car_s - 30 < check_car_s) && (my_car.car_s + 30 > check_car_s);
@@ -163,8 +162,9 @@ void calculate_prediction(vector<vector<double>> &sensor_fusion, Vehicle &my_car
 
 void plan_behaviour(Vehicle &my_car, int &lane, double &speed_diff, double ref_vel){
   // Behavior : Let's see what to do.
-  if ( my_car.car_ahead ) { // Car ahead
-    if ( !my_car.car_left && lane > 0 ) {
+  // Car ahead or in the back
+  if (my_car.in_lane) {
+    if (!my_car.car_left && lane > 0) {
       // if there is no car left and there is a left lane.
       cout << "| Change lane to the LEFT" << endl;
       lane--; // Change lane left.
@@ -234,12 +234,11 @@ int main() {
 
       if (s != "") {
         auto j = json::parse(s);
-
         string event = j[0].get<string>();
 
         if (event == "telemetry") {
           // j[1] is the data JSON object
-          Vehicle my_car(j);
+          Vehicle my_car(j[1]);
 
           // Previous path data given to the Planner
           vector<double> previous_path_x = j[1]["previous_path_x"];
