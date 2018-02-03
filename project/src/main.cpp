@@ -197,6 +197,12 @@ int main() {
   // Waypoint map to read from
   string map_file_ = "../data/highway_map.csv";
 
+  // Car's lane. Stating at middle lane.
+  int lane = 1;
+
+  // Reference velocity.
+  double ref_vel = 0.0; // mph
+
   ifstream in_map_(map_file_.c_str(), ifstream::in);
 
   string line;

@@ -13,10 +13,6 @@ const double MAX_SPEED = 49.5;
 const double MAX_ACC = .224;
 // The max s value before wrapping around the track back to 0
 double MAX_S = 6945.554;
-// Car's lane. Stating at middle lane.
-int lane = 1;
-// Reference velocity.
-double ref_vel = 0.0; // mph
 
 // Checks if the SocketIO event has JSON data.
 // If there is data the JSON object in string format will be returned,
