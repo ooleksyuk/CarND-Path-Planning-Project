@@ -251,7 +251,7 @@ int main() {
           vector<vector<double>> sensor_fusion = j[1]["sensor_fusion"];
 
           // Provided previous path point size.
-          int prev_size = previous_path_x.size();
+          auto prev_size = (int)previous_path_x.size();
 
           // Preventing collisions.
           if (prev_size > 0) {
